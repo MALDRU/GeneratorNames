@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Generator Names</title>
+    <style>
+      .container {
+        width: 600px;
+        height: 600px;
+        margin: auto;
+        background-image: url(./background.jpeg);
+        background-size: cover;
+        background-position: center;
+
+        & > div {
+          height: 260px;
+          font-size: 80px;
+          font-family: "Arial Black";
+          display: flex;
+          justify-content: center;
+          align-items: flex-end;
+
+          & > span {
+            display: inline-block;
+            margin-left: -12px;
+          }
+        }
+      }
+
+      .containerExport {
+        width: 1599px;
+        height: 1600px;
+        margin: auto;
+        background-image: url(./background.jpeg);
+        background-size: cover;
+        background-position: center;
+
+        & > div {
+          height: 660px;
+          font-size: 186px;
+          font-family: "Arial Black";
+          display: flex;
+          justify-content: center;
+          align-items: flex-end;
+
+          & > span {
+            display: inline-block;
+            margin-left: -30px;
+          }
+        }
+      }
+      .letter1 {
+        color: rgb(222, 0, 27);
+      }
+      .letter2 {
+        color: rgb(132, 0, 16);
+      }
+      .letter3 {
+        color: rgb(56, 0, 7);
+      }
+    </style>
+  </head>
+  <body>
+    <input
+      id="nameInput"
+      type="text"
+      placeholder="Ingresa el nombre"
+      maxlength="10"
+    />
+    <button id="btnDownload">Descargar</button>
+    <div id="container" class="container">
+      <div id="containerName"></div>
+    </div>
+  </body>
+  <script src="./html2canvas.min.js"></script>
+  <script>
+    const nameInput = document.getElementById("nameInput");
+    const containerName = document.getElementById("containerName");
+    const btnDownload = document.getElementById("btnDownload");
+    const container = document.getElementById("container");
+
+    nameInput.addEventListener("keyup", ({ target: { value } }) => {
+      let nameHtml = "";
+      let sequence = 1;
+      for (let i = 0; i < value.length; i++) {
+        if (sequence === 4) sequence = 1;
+        nameHtml += `<span class='letter${sequence}'>${value.charAt(i)}</span>`;
+        sequence++;
+      }
+      containerName.innerHTML = nameHtml;
+    });
+
+    btnDownload.addEventListener("click", (e) => {
+      container.classList.replace("container", "containerExport");
+      html2canvas(container, {
+        allowTaint: true,
+        useCORS: true,
+      }).then(function (canvas) {
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = `${nameInput.value}.png`;
+        link.click();
+        container.classList.replace("containerExport", "container");
+      });
+    });
+  </script>
+</html>
